@@ -3,7 +3,7 @@
 1. **Initialize Database:**
     - Use Docker Compose to start the database:
       ```bash
-      docker-compose -f compose.yaml up -d
+      docker compose -f compose.yaml up -d
       ```
 
 2. **Access Swagger Documentation:**
