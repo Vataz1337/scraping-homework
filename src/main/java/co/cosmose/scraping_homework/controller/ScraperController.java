@@ -1,7 +1,11 @@
 package co.cosmose.scraping_homework.controller;
 
+import co.cosmose.scraping_homework.model.PublisherContent;
 import co.cosmose.scraping_homework.service.RSSScraperService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/scrapper")
@@ -13,8 +17,14 @@ public class ScraperController {
     }
 
     @PostMapping("/scrapLink")
-    public void getFeed(@RequestParam String url) {
+    public void scrapeUrl(@RequestParam String url) {
         //https://connect.thairath.co.th/ws/kaikai/content/mirror
         rssScraperService.scrapeAndSave(url);
+    }
+
+    @GetMapping("/getScrappedContent")
+    public ResponseEntity<List<PublisherContent>> getScrappedContent() {
+        List<PublisherContent> publisherContents = rssScraperService.getScrappedContent();
+        return ResponseEntity.ok(publisherContents);
     }
 }

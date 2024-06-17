@@ -24,9 +24,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RSSScraperService {
     private final PublisherContentRepository publisherContentRepository;
+    private final SyndFeedInput syndFeedInput;
 
-    public RSSScraperService(PublisherContentRepository publisherContentRepository) {
+    public RSSScraperService(PublisherContentRepository publisherContentRepository, SyndFeedInput syndFeedInput) {
         this.publisherContentRepository = publisherContentRepository;
+        this.syndFeedInput = syndFeedInput;
+    }
+
+    public List<PublisherContent> getScrappedContent() {
+        return publisherContentRepository.findAll();
     }
 
     public void scrapeAndSave(String url) {
@@ -55,11 +61,9 @@ public class RSSScraperService {
             URL feedUrl = feedUri.toURL();
             URLConnection connection =  feedUrl.openConnection();
             connection.connect();
-
             InputStream inputStream = connection.getInputStream();
-            SyndFeedInput input = new SyndFeedInput();
 
-            return input.build(new XmlReader(inputStream));
+            return syndFeedInput.build(new XmlReader(inputStream));
         } catch (Exception e) {
             throw new RSSFeedException("Failed to extract RSS feed from URL: " + url, e);
         }
@@ -70,11 +74,15 @@ public class RSSScraperService {
     }
 
     String removeLinksFromHtml(String content) {
-        String unescapedString = StringEscapeUtils.unescapeHtml4(content);
-        Document document = Jsoup.parse(unescapedString);
-        document.select("a").remove();
+        try {
+            String unescapedString = StringEscapeUtils.unescapeHtml4(content);
+            Document document = Jsoup.parse(unescapedString);
+            document.select("a").remove();
 
-        return document.body().html();
+            return document.body().html();
+        } catch (Exception e) {
+            throw new RSSFeedException("Failed to parse HTML content", e);
+        }
     }
 
     String extractMainImageUrl(SyndEntry entry) {
