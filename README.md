@@ -11,7 +11,7 @@
       [http://localhost:8443/swagger-ui/index.html](http://localhost:8443/swagger-ui/index.html)
 
 ### 
-I wasn't entirely certain about the "originalContent" property in PublisherContent class, I assumed it referred to unedited content from the description <description>. 
+I wasn't entirely certain about the "originalContent" property in PublisherContent class, I assumed it referred to unedited content from the description. 
 
 # Scraping homework
 

@@ -9,5 +9,4 @@ class ScrapingHomeworkApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
